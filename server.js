@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-mongoose.connect('mongodb://0.0.0.0/MEPROTOCOL');
+mongoose.connect('mongodb://localhost:27017/MEPROTOCOL');
 
 const dataSchema = new mongoose.Schema({
     date: Date,
