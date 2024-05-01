@@ -1,0 +1,228 @@
+<!-- views/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ME PORTAL</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        @font-face {
+            font-family: Chap;
+            src: url("../fonts/Chap-Regular/Chap-Regular.ttf");
+        }
+        html{
+            font-family: Chap;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .title {
+            margin-left: 20px;
+        }
+        @media (max-width: 768px) {
+            nav ul {
+                display: block;
+                text-align: right;
+            }
+            nav ul li {
+                display: inline;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+            .title {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        /* Base styles */
+        .logo {
+            float: left;
+            padding: 10px 20px;
+        }
+
+        .menu-toggle {
+            display: none;
+            padding: 10px 20px;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        .menu-toggle__bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: #333;
+        }
+
+        .menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .menu li {
+            padding: 10px 20px;
+        }
+
+        .menu li a {
+            text-decoration: none;
+            color: whitesmoke;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                background-color: #333;
+            }
+
+            .menu li {
+                text-align: left;
+                width: 100%;
+                cursor: pointer;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            #menu-toggle:checked + .menu-toggle + .menu {
+                display: flex;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<nav>
+    <div class="logo">
+        <h1 class="title">ME PORTAL</h1>
+    </div>
+    <input type="checkbox" id="menu-toggle" style="display: none;">
+    <label for="menu-toggle" class="menu-toggle">
+        <i class="fas fa-bars"></i> <!-- Font Awesome bars icon -->
+    </label>
+    <ul class="menu">
+        <li><a href="#performance"><i class="fas fa-chart-line"></i>Perfomance</a></li>
+        <li><a href="/entries"><i class="fas fa-file-alt"></i>Entries</a></li>
+        <li><a href="/debts"><i class="fas fa-money-check-alt"></i>Debts</a></li>
+        <li><a href="/cash"><i class="fas fa-piggy-bank"></i>Cash Reserves</a></li>
+    </ul>
+</nav>
+
+<h2 style="text-align: center;">Data Visualization</h2>
+
+<!-- Chart Canvas -->
+<div style="max-width: 800px; margin: 0 auto;"> <!-- Set maximum width and center the chart -->
+    <canvas id="myChart" style="width: 100%;"></canvas> <!-- Set canvas width to 100% -->
+</div>
+
+<script>
+    fetch('/data')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => formatDateString(item.date)); // Format date strings
+            const values = data.map(item => item.value);
+            renderChart(labels, values);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+    // Function to format date string like "5th Jan"
+    function formatDateString(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const month = monthNames[date.getMonth()];
+        return `${day}${ordinalSuffix(day)} ${month}`;
+    }
+
+    // Function to add ordinal suffix to day number
+    function ordinalSuffix(day) {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+            case 1:  return "st";
+            case 2:  return "nd";
+            case 3:  return "rd";
+            default: return "th";
+        }
+    }
+
+    function renderChart(labels, values) {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line', // Change the chart type to line
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Data from Database',
+                    data: values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, // Make the chart responsive
+                maintainAspectRatio: false, // Allow the chart to adjust its aspect ratio
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: {
+                            unit: 'day'
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value'
+                        },
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Exchange New Entries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .container input[type="date"],
+        .container input[type="number"],
+        .container button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .container button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .container button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: orangered;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form action="/submit-data" method="POST">
+        <div>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+        <div>
+            <label for="value">Value:</label>
+            <input type="number" id="value" name="value" required>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Button to navigate back to the main page -->
+    <button class="back-button" onclick="window.location.href='/'">Back to Main Page</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cash Reserves</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    @font-face {
+        font-family: Chap;
+        src: url("../fonts/Chap-Regular/Chap-Regular.ttf");
+    }
+    html{
+        font-family: Chap;
+        font-size: 40px;
+        font-weight: bold;
+        background: black;
+        color: ghostwhite;
+    }
+    .cash{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive Styles */
+    @media only screen and (max-width: 600px) {
+        .cash {
+            width: 90%;
+            margin: 10px auto;
+        }
+    }
+</style>
+<body>
+<%
+let totalPaidAmount = 0;
+debtors.forEach(debtor => {
+    if (debtor.status === "paid") {
+        totalPaidAmount += debtor.amount;
+    }
+});
+
+// Format totalPaidAmount as a string with two decimal places
+let formattedTotalPaidAmount = totalPaidAmount.toFixed(2);
+if (totalPaidAmount === 0) {
+    formattedTotalPaidAmount = "0.00";
+}
+%>
+<div class="cash">
+    <p>Cash Reserve: <%= formattedTotalPaidAmount %></p>
+    <button onclick="goToMainPage()">Back to Main Page</button>
+</div>
+</body>
+<script>
+    function goToMainPage() {
+        // Replace this with the URL of your main page
+        window.location.href = "/";
+    }
+</script>
+</html>
