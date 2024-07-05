@@ -5,136 +5,229 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ME Debts</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: Chap;
+            src: url("../fonts/Chap-Regular/Chap-Regular.ttf");
+        }
+
+        body {
+            font-family: Chap, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        .form, .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .form input, .search-form input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .form button, .search-form button {
+            max-width: 50px;
+            width: 100%;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .form button:hover, .search-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        .amount-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .amount-container i {
+            margin-left: 10px;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            top: 25px;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            z-index: 10;
+            width: 200px;
+        }
+
+        .amount-container:hover .tooltip {
+            display: block;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            margin-right: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-buttons button:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .back-button,
+        .upload-button {
+            padding: 10px 20px;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button {
+            background-color: #dc3545;
+        }
+
+        .back-button:hover {
+            background-color: #bd2130;
+        }
+
+        .upload-button {
+            background-color: #28a745;
+        }
+
+        .upload-button:hover {
+            background-color: #218838;
+        }
+
+        .paid-record {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 </head>
-<style>
-    *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    .form {
-        display: flex;
-        flex-wrap: wrap; /* Allow items to wrap to next line */
-        justify-content: center; /* Center items horizontally */
-        margin-bottom: 10px;
-    }
-
-    .form input,
-    .form button {
-        padding: 8px;
-        margin: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        flex: 1; /* Each item takes equal width */
-        max-width: 200px; /* Limit maximum width */
-    }
-
-    .form button {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .form button:hover {
-        background-color: #0056b3;
-    }
-
-    .back-button {
-        padding: 10px 20px;
-        border: none;
-        background-color: #dc3545;
-        color: #fff;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .back-button:hover {
-        background-color: #bd2130;
-    }
-    .debtAmountContainer {
-        background-color: #f5f5f5;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 20px;
-        max-width: 500px; /* Limit maximum width */
-        width: 100%; /* Occupy full width */
-        margin: 1rem 0; /* Adjust margin */
-    }
-
-    .debt__amount {
-        display: flex;
-        flex-direction: column; /* Stack items vertically */
-    }
-
-    .debt-div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 10px; /* Add space between items */
-    }
-
-    .debt__amount input[type="checkbox"] {
-        margin-right: 10px;
-    }
-
-    .debt__amount label {
-        display: flex;
-        align-items: center; /* Center items vertically */
-        padding: 8px 12px;
-        margin-bottom: 8px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-        width: 100%; /* Occupy full width */
-    }
-
-    .debt__amount label:hover {
-        background-color: #e0e0e0;
-    }
-</style>
 <body>
+<form action="/submit-debt" method="POST" class="form">
+    <input type="text" id="debt" name="debt" placeholder="Debtor" required>
+    <input type="number" id="amount" name="amount" placeholder="Amount" required>
+    <input type="text" id="desc" name="desc" placeholder="Products loaned">
+    <button type="submit" class="button"><i class="fas fa-plus"></i></button>
+</form>
+
+<form action="/search-debts" method="GET" class="search-form">
+    <input type="text" name="query" placeholder="Search Debtor" required>
+    <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+
 <div class="container">
-    <form action="/submit-debt" method="POST" class="form">
-        <input type="text" id="debt" name="debt" placeholder="Debtor" required>
-        <input type="number" id="amount" name="amount" placeholder="Amount" required>
-        <input type="text" id="desc" name="desc" placeholder="Products loaned">
-
-        <button type="submit"> <i class="fas fa-plus"></i> </button>
-    </form>
-    <div class="debtAmountContainer">
-        <div class="debt__amount">
-            <%debtors.forEach(debtor => {%>
-                <div class="debt-div">
-                    <form action="/mark-paid" method="post" style="display: flex; flex-direction: row; justify-content: space-between; width: 300px;">
-                        <input type="hidden" name="id" value="<%= debtor._id %>">
-                        <label>
-                            <%= debtor.debt %> - <%= debtor.amount %> - <%= debtor.desc %>
-                            <% if (debtor.status === 'paid') { %>
-                                <span style="color: green;">(Paid)</span>
-                            <% } else { %>
-                                <span style="color: red;">(Unpaid)</span>
-                                <button type="submit" style="width: 150px; height: 35px; margin: 0 10px;">Mark as Paid</button>
-                            <% } %>
-                        </label>
-
-                    </form>
-                </div>
-
-            <%})%>
-        </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Date Placed</th>
+            <th>Debtor</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% debtors.forEach(debtor => { %>
+            <tr class="<%= debtor.status === 'paid' ? 'paid-record' : '' %>">
+                <td><%= new Date(debtor.date).toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric', year: '2-digit' }) %></td>
+                <td><%= debtor.debt %></td>
+                <td>
+                    <div class="amount-container" style="display: flex; justify-content: space-between;">
+                        <%= debtor.amount %>
+                        <i class="fas fa-info-circle"></i>
+                        <div class="tooltip"><%= debtor.desc %></div>
+                    </div>
+                </td>
+                <td class="action-buttons">
+                    <% if (debtor.status === 'paid') { %>
+                        <span style="color: green;">Paid</span>
+                    <% } else { %>
+                        <form action="/mark-paid" method="post">
+                            <input type="hidden" name="id" value="<%= debtor._id %>">
+                            <div>
+                                <button type="submit">MAP</button>
+                            </div>
+                        </form>
+                        <button><a style="text-decoration:none; color: inherit;" href="/edit-amount/<%= debtor.id %>">Edit</a></button>
+                    <% } %>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+    <div class="button-group">
+        <button class="back-button" onclick="window.location.href='/';">Back to Main Page</button>
+        <button class="upload-button" onclick="window.location.href='/upload-to-cloud';">Upload to Cloud</button>
     </div>
-    <button class="back-button" onclick="window.location.href='/'">Back to Main Page</button>
 </div>
 </body>
 </html>

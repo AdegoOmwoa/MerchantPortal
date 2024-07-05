@@ -1,11 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cash Reserves</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spreadsheet</title>
 </head>
 <style>
     *{
@@ -13,25 +11,39 @@
         padding: 0;
         box-sizing: border-box;
     }
+
     @font-face {
         font-family: Chap;
         src: url("../fonts/Chap-Regular/Chap-Regular.ttf");
     }
-    html{
+
+    html {
         font-family: Chap;
-        font-size: 40px;
-        font-weight: bold;
-        background: black;
-        color: ghostwhite;
     }
-    .cash{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
     }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
     button {
+        margin-top: 20px;
         padding: 10px 20px;
         background-color: #007bff;
         color: #fff;
@@ -44,39 +56,45 @@
     button:hover {
         background-color: #0056b3;
     }
-
-    /* Responsive Styles */
-    @media only screen and (max-width: 600px) {
-        .cash {
-            width: 90%;
-            margin: 10px auto;
-        }
-    }
 </style>
 <body>
-<%
-let totalPaidAmount = 0;
-debtors.forEach(debtor => {
-    if (debtor.status === "paid") {
-        totalPaidAmount += debtor.amount;
-    }
-});
+<div class="container">
+    <!-- Calculate and display total amount -->
+    <% let totalAmount = 0; %>
+    <% debtors.forEach(debtor => { %>
+        <% if (debtor.status === "paid") { %>
+            <% totalAmount += debtor.amount; %>
+        <% } %>
+    <% }) %>
+    <p style="margin: 20px 0;">Total Amount Paid: <%= totalAmount.toFixed(2) %></p>
 
-// Format totalPaidAmount as a string with two decimal places
-let formattedTotalPaidAmount = totalPaidAmount.toFixed(2);
-if (totalPaidAmount === 0) {
-    formattedTotalPaidAmount = "0.00";
-}
-%>
-<div class="cash">
-    <p>Cash Reserve: <%= formattedTotalPaidAmount %></p>
+    <table>
+        <thead>
+        <tr>
+            <th>Time Saved</th>
+            <th>Person</th>
+            <th>Amount Paid</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% debtors.forEach(debtor => { %>
+            <% if (debtor.status === "paid") { %>
+                <tr>
+                    <!-- Format date using EJS -->
+                    <td><%= new Date(debtor.date).toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric', year: '2-digit' }) %></td>
+                    <td><%= debtor.debt %></td>
+                    <td><%= debtor.amount %></td>
+                </tr>
+            <% } %>
+        <% }) %>
+        </tbody>
+    </table>
     <button onclick="goToMainPage()">Back to Main Page</button>
 </div>
-</body>
 <script>
     function goToMainPage() {
-        // Replace this with the URL of your main page
         window.location.href = "/";
     }
 </script>
+</body>
 </html>

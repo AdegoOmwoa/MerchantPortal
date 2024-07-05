@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ME Debts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            @font-face {
+                font-family: Chap;
+                src: url("../fonts/Chap-Regular/Chap-Regular.ttf");
+            }
+
+            body {
+                font-family: Chap, sans-serif;
+            }
+
+            .form {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+
+            .form input {
+                padding: 8px;
+                margin: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                flex: 1;
+                max-width: 200px;
+            }
+
+            .form button{
+                max-width: 50px;
+                width: 100%;
+                margin: 5px;
+                padding: 8px;
+                border-radius: 5px;
+            }
+
+            .form .button {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .form button:hover {
+                background-color: #0056b3;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+            }
+
+            th, td {
+                padding: 5px;
+                border-bottom: 1px solid #ddd;
+                border-right: 1px solid #ddd;
+                text-align: left;
+            }
+
+            th {
+                background-color: #f2f2f2;
+            }
+
+            th:last-child, td:last-child {
+                border-right: none;
+            }
+
+            .action-buttons {
+                display: flex;
+                align-items: center;
+            }
+
+            .action-buttons button {
+                margin-right: 10px;
+                padding: 8px 12px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .action-buttons button:hover {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            .back-button {
+                padding: 10px 20px;
+                border: none;
+                background-color: #dc3545;
+                color: #fff;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .back-button:hover {
+                background-color: #bd2130;
+            }
+
+            .paid-record {
+                display: none;
+            }
+
+            .edit-form {
+                display: none;
+            }
+        </style>
+</head>
+<body>
+<form action="/submit-debt" method="POST" class="form">
+    <input type="text" id="debt" name="debt" placeholder="Debtor" required>
+    <input type="number" id="amount" name="amount" placeholder="Amount" required>
+    <input type="text" id="desc" name="desc" placeholder="Products loaned">
+
+    <button type="submit" class="button"> <i class="fas fa-plus"></i> </button>
+</form>
+
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th>Date Placed</th>
+                <th>Debtor</th>
+                <th>Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%debtors.forEach(debtor => {%>
+                <tr class="<%= debtor.status === 'paid' ? 'paid-record' : '' %>">
+                    <td><%= debtor.datePlaced %></td>
+                    <td><%= debtor.debt %></td>
+                    <td>$<%= debtor.amount %></td>
+                    <td class="action-buttons">
+                        <% if (debtor.status === 'paid') { %>
+                            <span style="color: green;">Paid</span>
+                        <% } else { %>
+                            <form action="/edit" method="POST" onsubmit="event.preventDefault(); editDebt(this);">
+                                <input type="hidden" name="id" value="<%= debtor._id %>">
+                                <button type="submit">MAP</button>
+                                <button type="button" onclick="editEntry('<%= debtor._id %>')">Edit</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            <%})%>
+        </tbody>
+    </table>
+    <button class="back-button" onclick="window.location.href='/';">Back to Main Page</button>
+</div>
+
+<!-- JavaScript function to handle editing -->
+<script>
+    function editEntry(debtorId) {
+        // Redirect to the edit amount page with debtor ID
+        window.location.href = `/edit-amount?debtorId=${debtorId}`;
+    }
+
+    function editDebt(form) {
+        // Prevent default form submission
+        event.preventDefault();
+
+        // Get form data
+        const formData = new FormData(form);
+
+        // Serialize form data into JSON
+        const jsonData = {};
+        for (const [key, value] of formData.entries()) {
+            jsonData[key] = value;
+        }
+
+        // Send POST request to edit debt
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to edit debt');
+            }
+            // Optionally handle success response
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Optionally handle error
+        });
+    }
+</script>
+</body>
+</html>
