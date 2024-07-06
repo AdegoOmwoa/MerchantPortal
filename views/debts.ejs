@@ -196,32 +196,24 @@
         </tr>
         </thead>
         <tbody>
-        <% debtors.forEach(debtor => { %>
-            <tr class="<%= debtor.status === 'paid' ? 'paid-record' : '' %>">
-                <td><%= new Date(debtor.date).toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric', year: '2-digit' }) %></td>
-                <td><%= debtor.debt %></td>
-                <td>
-                    <div class="amount-container" style="display: flex; justify-content: space-between;">
-                        <%= debtor.amount %>
-                        <i class="fas fa-info-circle"></i>
-                        <div class="tooltip"><%= debtor.desc %></div>
-                    </div>
-                </td>
-                <td class="action-buttons">
-                    <% if (debtor.status === 'paid') { %>
-                        <span style="color: green;">Paid</span>
-                    <% } else { %>
-                        <form action="/mark-paid" method="post">
-                            <input type="hidden" name="id" value="<%= debtor._id %>">
-                            <div>
-                                <button type="submit">MAP</button>
-                            </div>
-                        </form>
-                        <button><a style="text-decoration:none; color: inherit;" href="/edit-amount/<%= debtor.id %>">Edit</a></button>
-                    <% } %>
-                </td>
-            </tr>
-        <% }) %>
+        <!-- Sample data row -->
+        <tr>
+            <td>01/01/24</td>
+            <td>John Doe</td>
+            <td>
+                <div class="amount-container">
+                    100
+                    <i class="fas fa-info-circle"></i>
+                    <div class="tooltip">Laptop, Phone</div>
+                </div>
+            </td>
+            <td class="action-buttons">
+                <!-- Replace with actual buttons and forms as needed -->
+                <button>MAP</button>
+                <button>Edit</button>
+            </td>
+        </tr>
+        <!-- Additional rows can be added here -->
         </tbody>
     </table>
     <div class="button-group">

@@ -1,9 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
+<<<<<<< HEAD
+=======
+const { Storage } = require('@google-cloud/storage');
+>>>>>>> 69d548c (first low)
 require('dotenv').config();
 
 const app = express();
 
+<<<<<<< HEAD
+=======
+// app.use(methodOverride('_method'));
+
+>>>>>>> 69d548c (first low)
 mongoose.connect('mongodb://0.0.0.0/MEPROTOCOL');
 
 const dataSchema = new mongoose.Schema({
