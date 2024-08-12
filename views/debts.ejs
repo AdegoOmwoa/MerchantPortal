@@ -174,61 +174,66 @@
 </head>
 <body>
     <!-- let me take you to the higlands -->
-<form action="/submit-debt" method="POST" class="form">
-    <input type="text" id="debt" name="debt" placeholder="Debtor" required>
-    <input type="number" id="amount" name="amount" placeholder="Amount" required>
-    <input type="text" id="desc" name="desc" placeholder="Products loaned">
-    <button type="submit" class="button"><i class="fas fa-plus"></i></button>
-</form>
+    <form action="/submit-debt" method="POST" class="form">
+        <input type="text" id="debt" name="debt" placeholder="Debtor" required>
+        <input type="number" id="amount" name="amount" placeholder="Amount" required>
+        <input type="text" id="desc" name="desc" placeholder="Products loaned">
+        <button type="submit" class="button"><i class="fas fa-plus"></i></button>
+    </form>
 
-<form action="/search-debts" method="GET" class="search-form">
-    <input type="text" name="query" placeholder="Search Debtor" required>
-    <button type="submit"><i class="fas fa-search"></i></button>
-</form>
+    <form action="/search-debts" method="GET" class="search-form">
+        <input type="text" name="query" placeholder="Search Debtor" required>
+        <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
 
-<div class="container">
-    <table>
-        <thead>
-        <tr>
-            <th>Date Placed</th>
-            <th>Debtor</th>
-            <th>Amount</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% debtors.forEach(debtor => { %>
-            <tr class="<%= debtor.status === 'paid' ? 'paid-record' : '' %>">
-                <td><%= new Date(debtor.date).toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric', year: '2-digit' }) %></td>
-                <td><%= debtor.debt %></td>
-                <td>
-                    <div class="amount-container" style="display: flex; justify-content: space-between;">
-                        <%= debtor.amount %>
-                        <i class="fas fa-info-circle"></i>
-                        <div class="tooltip"><%= debtor.desc %></div>
-                    </div>
-                </td>
-                <td class="action-buttons">
-                    <% if (debtor.status === 'paid') { %>
-                        <span style="color: green;">Paid</span>
-                    <% } else { %>
-                        <form action="/mark-paid" method="post">
-                            <input type="hidden" name="id" value="<%= debtor._id %>">
-                            <div>
-                                <button type="submit">MAP</button>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date Placed</th>
+                    <th>Debtor</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% debtors.forEach(debtor => { %>
+                    <tr class="<%= debtor.status === 'paid' ? 'paid-record' : '' %>">
+                        <td>
+                            <%= new Date(debtor.date).toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric', year: '2-digit' }) %><br>
+                            <% if (debtor.updatedDate) { %>
+                                <span style="color: #6c757d; font-size: 0.8em;">Updated: <%= new Date(debtor.updatedDate).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' }) %></span>
+                            <% } %>
+                        </td>
+                        <td><%= debtor.debt %></td>
+                        <td>
+                            <div class="amount-container" style="display: flex; justify-content: space-between;">
+                                <%= debtor.amount %>
+                                <i class="fas fa-info-circle"></i>
+                                <div class="tooltip"><%= debtor.desc %></div>
                             </div>
-                        </form>
-                        <button><a style="text-decoration:none; color: inherit;" href="/edit-amount/<%= debtor.id %>">Edit</a></button>
-                    <% } %>
-                </td>
-            </tr>
-        <% }) %>
-        </tbody>
-    </table>
-    <div class="button-group">
-        <button class="back-button" onclick="window.location.href='/';">Back to Main Page</button>
-        <button class="upload-button" onclick="window.location.href='/upload-to-cloud';">Upload to Cloud</button>
+                        </td>
+                        <td class="action-buttons">
+                            <% if (debtor.status === 'paid') { %>
+                                <span style="color: green;">Paid</span>
+                            <% } else { %>
+                                <form action="/mark-paid" method="post">
+                                    <input type="hidden" name="id" value="<%= debtor._id %>">
+                                    <div>
+                                        <button type="submit">MAP</button>
+                                    </div>
+                                </form>
+                                <button><a style="text-decoration:none; color: inherit;" href="/edit-amount/<%= debtor.id %>">Edit</a></button>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <div class="button-group">
+            <button class="back-button" onclick="window.location.href='/';">Back to Main Page</button>
+            <button class="upload-button" onclick="window.location.href='/upload-to-cloud';">Upload to Cloud</button>
+        </div>
     </div>
-</div>
 </body>
 </html>

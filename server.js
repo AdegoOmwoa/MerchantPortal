@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 
-mongoose.connect('mongodb://0.0.0.0/MEPROTOCOL');
+mongoose.connect('mongodb+srv://adegomwoa:omwoa2000@cluster0.rqqab.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
 
 const dataSchema = new mongoose.Schema({
     date: Date,
