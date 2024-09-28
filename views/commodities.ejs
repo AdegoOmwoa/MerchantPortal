@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ME Debts - Commodities</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: Chap;
+            src: url("../fonts/Chap-Regular/Chap-Regular.ttf");
+        }
+
+        body {
+            font-family: Chap, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        .form, .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .form input, .search-form input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .form button, .search-form button {
+            max-width: 50px;
+            width: 100%;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .form button:hover, .search-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            margin-right: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-buttons button:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .back-button,
+        .upload-button {
+            padding: 10px 20px;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button {
+            background-color: #dc3545;
+        }
+
+        .back-button:hover {
+            background-color: #bd2130;
+        }
+
+        .upload-button {
+            background-color: #28a745;
+        }
+
+        .upload-button:hover {
+            background-color: #218838;
+        }
+
+        .paid-record {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <!-- Form to add a new commodity -->
+    <form action="submitCommodityForm" method="POST" id="debt-form" class="form">
+        <input type="text" id="commodity" name="commodity" placeholder="Commodity" required>
+        <input type="number" id="price" name="price" placeholder="Price" required>
+        <button type="submit" class="button"><i class="fas fa-plus"></i></button>
+    </form>
+
+    <!-- Form to search for a commodity -->
+    <form id="search-form" class="search-form">
+        <input type="text" name="query" placeholder="Search Commodity" required>
+        <button type="button"><i class="fas fa-search"></i></button>
+    </form>
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Commodity</th>
+                    <th>Price</th>
+                    <th>Add to Bucket</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% commodities.forEach(commodity => { %>
+                    <tr>
+                        <td><%= commodity.commodity %></td>
+                        <td><%= commodity.price %></td>
+                        <td class="action-buttons">
+                            <!-- Yes and No buttons -->
+                            <button type="button" onclick="setAvailability('<%= commodity.id %>', true)">Yes</button>
+                            <button type="button" onclick="setAvailability('<%= commodity.id %>', false)">No</button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <div class="button-group">
+            <button class="back-button" onclick="window.location.href='/';">Back to Main Page</button>
+            <button class="upload-button" onclick="window.location.href='/upload-to-cloud';">Upload to Cloud</button>
+        </div>
+    </div>
+</body>
+</html>
